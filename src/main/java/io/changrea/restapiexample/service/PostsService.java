@@ -36,4 +36,14 @@ public class PostsService {
 
         return new PostsResponseDto(entity);
     }
+
+    public Boolean delete(Long id) {
+        try {
+            postsRepository.deleteById(id);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 }
