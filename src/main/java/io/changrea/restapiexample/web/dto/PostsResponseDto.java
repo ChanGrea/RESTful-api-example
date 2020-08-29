@@ -1,7 +1,11 @@
 package io.changrea.restapiexample.web.dto;
 
 import io.changrea.restapiexample.domain.posts.Posts;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class PostsResponseDto {
 
     private Long id;
