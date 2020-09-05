@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,28 +35,63 @@ public class PostsApiController {
     }
 
     @GetMapping("/api/v1/posts/{id}")
-    public PostsResponseDto findById(@PathVariable Long id) {
-        return postsService.findById(id);
+    public ResponseEntity<EntityModel<PostsResponseDto>> findById(@PathVariable Long id) {
+        PostsResponseDto post = postsService.findById(id);
+        Link selfLink = linkTo(methodOn(PostsApiController.class).findById(id)).withSelfRel();
+        Link updateLink = linkTo(methodOn(PostsApiController.class)).withRel("update");
+        Link deleteLink = linkTo(methodOn(PostsApiController.class)).withRel("delete");
+
+        EntityModel<PostsResponseDto> result = EntityModel.of(post)
+                .add(selfLink)
+                .add(updateLink)
+                .add(deleteLink);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/api/v1/posts")
-    public Long save(@RequestBody PostsSaveRequestDto requestDto) {
-        return postsService.save(requestDto);
+    public ResponseEntity<EntityModel<Long>> save(@RequestBody PostsSaveRequestDto requestDto) {
+        Long id = postsService.save(requestDto);
+        Link selfLink = linkTo(methodOn(PostsApiController.class).save(requestDto)).withSelfRel();
+        Link getLink = linkTo(methodOn(PostsApiController.class)).withRel("get");
+        Link updateLink = linkTo(methodOn(PostsApiController.class)).withRel("update");
+        Link deleteLink = linkTo(methodOn(PostsApiController.class)).withRel("delete");
+
+        EntityModel<Long> result = EntityModel.of(id)
+                .add(selfLink)
+                .add(getLink)
+                .add(updateLink)
+                .add(deleteLink);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/api/v1/posts/{id}")
-    public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
-        return postsService.update(id, requestDto);
+    public ResponseEntity<EntityModel<Long>> update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto) {
+        Long updatedId = postsService.update(id, requestDto);
+        Link selfLink = linkTo(methodOn(PostsApiController.class).update(id, requestDto)).withSelfRel();
+        Link getLink = linkTo(methodOn(PostsApiController.class)).withRel("get");
+        Link deleteLink = linkTo(methodOn(PostsApiController.class)).withRel("delete");
+
+        EntityModel<Long> result = EntityModel.of(updatedId)
+                .add(selfLink)
+                .add(getLink)
+                .add(deleteLink);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/api/v1/posts/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Boolean>> delete(@PathVariable Long id) {
         boolean isRemoved = postsService.delete(id);
+        Link selfLink = linkTo(methodOn(PostsApiController.class).delete(id)).withSelfRel();
 
         if(!isRemoved) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
 
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        EntityModel<Boolean> result = EntityModel.of(true).add(selfLink);
+
+        return ResponseEntity.ok().body(result);
     }
 }
