@@ -28,8 +28,6 @@ dependencies {
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 
     // swagger
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     compile group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 
