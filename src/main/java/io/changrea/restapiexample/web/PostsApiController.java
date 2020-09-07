@@ -81,7 +81,7 @@ public class PostsApiController {
         return ResponseEntity.ok().body(result);
     }
 
-    @ApiOperation(value = "Get Post for ID", notes = "포스트를 수정합니다.")
+    @ApiOperation(value = "Update Post for ID", notes = "포스트를 수정합니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
